@@ -1,15 +1,31 @@
-import { Controller, Get, Param, Post, Query, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Body,
+  Put,
+  Delete,
+  HttpStatus,
+  HttpCode,
+  Res
+} from '@nestjs/common';
+
+import { Response } from 'express';
 
 @Controller('products')
 export class ProductsController {
   @Get('filter')
-  getProductFilter() {
-    return {
+  getProductFilter(@Res() response: Response) {
+    // Return status code with express only (More complex)
+    response.status(200).send({
       message: `I am product filter`,
-    };
+    });
   }
 
   @Get(':productId')
+  @HttpCode(HttpStatus.ACCEPTED) // Customize status code wth nestjs.
   getProduct(@Param('productId') productId: string) {
     return {
       message: `product ${productId}`,
@@ -33,6 +49,21 @@ export class ProductsController {
     return {
       message: 'Create action',
       payload: payload,
+    };
+  }
+
+  @Put(':id')
+  update(@Param('id') id: number, @Body() payload: any) {
+    return {
+      id,
+      payload,
+    };
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: number) {
+    return {
+      id,
     };
   }
 }
