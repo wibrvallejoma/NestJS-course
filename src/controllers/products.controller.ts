@@ -10,10 +10,11 @@ import {
   HttpStatus,
   HttpCode,
   Res,
+  // ParseIntPipe,
 } from '@nestjs/common';
 
 import { Response } from 'express';
-
+import { ParseIntPipe } from '../common/parse-int.pipe';
 import { ProductsService } from '../services/products.service';
 
 @Controller('products')
@@ -30,8 +31,8 @@ export class ProductsController {
 
   @Get(':productId')
   @HttpCode(HttpStatus.ACCEPTED) // Customize status code wth nestjs.
-  getProduct(@Param('productId') productId: string) {
-    return this.productsService.findOne(+productId);
+  getProduct(@Param('productId', ParseIntPipe) productId: number) {
+    return this.productsService.findOne(productId);
   }
 
   // ?limit=100&offset=50
@@ -50,12 +51,12 @@ export class ProductsController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() payload: any) {
-    return this.productsService.update(+id, payload);
+  update(@Param('id', ParseIntPipe) id: number, @Body() payload: any) {
+    return this.productsService.update(id, payload);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.productsService.delete(+id);
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.delete(id);
   }
 }
