@@ -9,13 +9,17 @@ import {
   Delete,
   HttpStatus,
   HttpCode,
-  Res
+  Res,
 } from '@nestjs/common';
 
 import { Response } from 'express';
 
+import { ProductsService } from '../services/products.service';
+
 @Controller('products')
 export class ProductsController {
+  constructor(private productsService: ProductsService) {}
+
   @Get('filter')
   getProductFilter(@Res() response: Response) {
     // Return status code with express only (More complex)
@@ -27,9 +31,7 @@ export class ProductsController {
   @Get(':productId')
   @HttpCode(HttpStatus.ACCEPTED) // Customize status code wth nestjs.
   getProduct(@Param('productId') productId: string) {
-    return {
-      message: `product ${productId}`,
-    };
+    return this.productsService.findOne(+productId);
   }
 
   // ?limit=100&offset=50
@@ -39,31 +41,21 @@ export class ProductsController {
     @Query('offset') offset = 0,
     @Query('brand') brand: string,
   ) {
-    return {
-      message: `products; limit => ${limit}, offset => ${offset}, brand => ${brand}`,
-    };
+    return this.productsService.findAll();
   }
 
   @Post()
   create(@Body() payload: any) {
-    return {
-      message: 'Create action',
-      payload: payload,
-    };
+    return this.productsService.create(payload);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() payload: any) {
-    return {
-      id,
-      payload,
-    };
+  update(@Param('id') id: string, @Body() payload: any) {
+    return this.productsService.update(+id, payload);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: number) {
-    return {
-      id,
-    };
+  delete(@Param('id') id: string) {
+    return this.productsService.delete(+id);
   }
 }
