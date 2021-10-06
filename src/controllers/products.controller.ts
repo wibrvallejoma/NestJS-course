@@ -31,13 +31,14 @@ export class ProductsController {
   }
 
   @Get(':productId')
-  @HttpCode(HttpStatus.ACCEPTED) // Customize status code wth nestjs.
+  @HttpCode(HttpStatus.OK) // Customize status code wth nestjs.
   getProduct(@Param('productId', ParseIntPipe) productId: number) {
     return this.productsService.findOne(productId);
   }
 
   // ?limit=100&offset=50
   @Get()
+  @HttpCode(HttpStatus.OK)
   getProducts(
     @Query('limit') limit = 100, // default value.
     @Query('offset') offset = 0,
@@ -47,11 +48,13 @@ export class ProductsController {
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() payload: CreateProductDto) {
     return this.productsService.create(payload);
   }
 
   @Put(':id')
+  @HttpCode(HttpStatus.OK)
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() payload: UpdateProductDto,
@@ -60,6 +63,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.delete(id);
   }

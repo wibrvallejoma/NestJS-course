@@ -49,15 +49,15 @@ export class ProductsService {
 
   update(id: number, payload: UpdateProductDto) {
     const product = this.findOne(id);
-    if (product) {
-      const index = this.products.findIndex((item) => item.id === id);
-      // Merge original product with new values
-      this.products[index] = {
-        ...product,
-        ...payload,
-      };
-      return this.products[index];
+    if (!product) {
+      return null;
     }
-    return null;
+    const index = this.products.findIndex((item) => item.id === id);
+    // Merge original product with new values
+    this.products[index] = {
+      ...product,
+      ...payload,
+    };
+    return this.products[index];
   }
 }
